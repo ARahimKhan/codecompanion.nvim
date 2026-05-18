@@ -71,6 +71,13 @@ end
 ---@param action table
 ---@return table|nil source, string|nil error
 local function make_file_source(action)
+  if not action.filepath then
+    local newpath = vim.fn.input("Got empty filepath. Please enter one >> ")
+    if not newpath or newpath == "" then
+      return nil, "Error: filepath not provided. It is mandatory to provide filepath at top level object"
+    end
+    action.filepath = newpath
+  end
   local path = file_utils.validate_and_normalize_path(action.filepath)
   if not path then
     return nil, fmt("Error: Invalid or non-existent filepath `%s`", action.filepath)
